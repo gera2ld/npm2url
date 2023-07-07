@@ -14,7 +14,7 @@ export function cdnUrl(provider: string, path: string) {
 }
 
 export function getFastestProvider(path = testPath) {
-  return Promise.race(
+  return Promise.any(
     Object.entries(providers).map(async ([name, factory]) => {
       const res = await fetch(factory(path));
       if (!res.ok) {
