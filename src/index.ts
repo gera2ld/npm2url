@@ -1,4 +1,4 @@
-const testPath = "@gera2ld/jsx-dom/dist/index.js";
+const testPath = "npm2url/dist/index.cjs";
 
 export const providers: Record<string, (path: string) => string> = {
   jsdelivr: (path: string) => `https://cdn.jsdelivr.net/npm/${path}`,

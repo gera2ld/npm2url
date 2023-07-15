@@ -1,7 +1,7 @@
 import { expect, it, describe } from "vitest";
 import { cdnUrl } from "../src";
 
-const testPath = "@gera2ld/jsx-dom/dist/index.js";
+const testPath = "npm2url/dist/index.cjs";
 
 describe("cdnUrl", () => {
   it("pass", () => {
