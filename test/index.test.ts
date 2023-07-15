@@ -1,13 +1,15 @@
 import { expect, it, describe } from "vitest";
-import { cdnUrl } from "../src";
+import { urlBuilder } from "../src";
 
 const testPath = "npm2url/dist/index.cjs";
 
-describe("cdnUrl", () => {
+describe("urlBuilder", () => {
   it("pass", () => {
-    expect(cdnUrl("jsdelivr", testPath)).toBe(
+    expect(urlBuilder.getFullUrl(testPath, "jsdelivr")).toBe(
       `https://cdn.jsdelivr.net/npm/${testPath}`
     );
-    expect(cdnUrl("unpkg", testPath)).toBe(`https://unpkg.com/${testPath}`);
+    expect(urlBuilder.getFullUrl(testPath, "unpkg")).toBe(
+      `https://unpkg.com/${testPath}`
+    );
   });
 });

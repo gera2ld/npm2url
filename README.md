@@ -18,13 +18,18 @@ pnpm install npm2url
 Import:
 
 ```ts
-import { cdnUrl, getFastestCdnUrl } from "npm2url";
+import { urlBuilder } from "npm2url";
 
-const url: string = cdnUrl('jsdelivr', 'npm2url');
+const url: string = urlBuilder.getFullUrl('npm2url');
+const url: string = urlBuilder.getFullUrl('npm2url', 'jsdelivr');
 
-// Or find the fastest provider
-const fastestCdnUrl = await getFastestCdnUrl();
-const url: string = fastestCdnUrl('npm2url');
+// find the fastest provider
+await urlBuilder.findFastestProvider();
+const fastestUrl = urlBuilder.getFullUrl('npm2url');
+
+// find the fastest provider temporarily
+const fastest = await urlBuilder.getFastestProvider();
+const fastestUrl = urlBuilder.getFullUrl('npm2url', fastest);
 ```
 
 ## License
