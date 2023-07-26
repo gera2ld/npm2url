@@ -1,6 +1,6 @@
 {
   "name": "npm2url",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Convert an NPM package import into a CDN URL.",
   "repository": "gera2ld/npm2url",
   "license": "MIT",
