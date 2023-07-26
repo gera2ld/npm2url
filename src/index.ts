@@ -10,21 +10,28 @@ export class UrlBuilder {
 
   provider = "jsdelivr";
 
-  getFastestProvider(path = testPath) {
-    return Promise.any(
-      Object.entries(this.providers).map(async ([name, factory]) => {
-        const res = await fetch(factory(path));
-        if (!res.ok) {
-          throw res;
-        }
-        await res.text();
-        return name;
-      })
-    );
+  getFastestProvider(timeout = 5000, path = testPath) {
+    return new Promise<string>((resolve, reject) => {
+      Promise.all(
+        Object.entries(this.providers).map(async ([name, factory]) => {
+          try {
+            const res = await fetch(factory(path));
+            if (!res.ok) {
+              throw res;
+            }
+            await res.text();
+            resolve(name);
+          } catch {
+            // ignore
+          }
+        })
+      ).then(() => reject(new Error("All providers failed")));
+      setTimeout(reject, timeout, new Error("Timed out"));
+    });
   }
 
-  async findFastestProvider() {
-    this.provider = await this.getFastestProvider();
+  async findFastestProvider(timeout?: number) {
+    this.provider = await this.getFastestProvider(timeout);
     return this.provider;
   }
 
