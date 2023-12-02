@@ -10,6 +10,10 @@ export class UrlBuilder {
 
   provider = "jsdelivr";
 
+  /**
+   * Get the fastest provider name.
+   * If none of the providers returns a valid response within `timeout`, an error will be thrown.
+   */
   getFastestProvider(timeout = 5000, path = testPath) {
     return new Promise<string>((resolve, reject) => {
       Promise.all(
@@ -30,8 +34,11 @@ export class UrlBuilder {
     });
   }
 
-  async findFastestProvider(timeout?: number) {
-    this.provider = await this.getFastestProvider(timeout);
+  /**
+   * Set the current provider to the fastest provider found by `getFastestProvider`.
+   */
+  async findFastestProvider(timeout?: number, path?: string) {
+    this.provider = await this.getFastestProvider(timeout, path);
     return this.provider;
   }
 
