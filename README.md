@@ -7,7 +7,9 @@
 
 Convert an NPM package import into a CDN URL.
 
-## Usage
+This is useful when you want your users to access the assets without needing to install the dependencies, and not being tied to a certain CDN.
+
+## Installation
 
 Install package:
 
@@ -15,22 +17,78 @@ Install package:
 pnpm install npm2url
 ```
 
-Import:
+## Quick Start
+
+```ts
+import { UrlBuilder, urlBuilder } from "npm2url";
+
+// Get the full CDN URL for `npm2url` package, using the default provider
+console.log(urlBuilder.getFullUrl("npm2url"));
+// -> https://cdn.jsdelivr.net/npm/npm2url
+
+// Get the full CDN URL for `npm2url` package, specifically using `jsdelivr` provider
+console.log(urlBuilder.getFullUrl("npm2url", "jsdelivr"));
+// -> https://cdn.jsdelivr.net/npm/npm2url
+
+// You may also create a new instance to hold different properties
+const anotherBuilder = new UrlBuilder();
+console.log(anotherBuilder.getFullUrl("npm2url"));
+```
+
+## Advanced Usage
+
+### Providers
 
 ```ts
 import { urlBuilder } from "npm2url";
 
-const url: string = urlBuilder.getFullUrl('npm2url');
-const url: string = urlBuilder.getFullUrl('npm2url', 'jsdelivr');
+// Show all available providers
+console.log(urlBuilder.providers);
+// -> { jsdelivr: [Function], unpkg: [Function] }
 
-// find the fastest provider
-await urlBuilder.findFastestProvider();
-const fastestUrl = urlBuilder.getFullUrl('npm2url');
-
-// find the fastest provider temporarily
-const fastest = await urlBuilder.getFastestProvider();
-const fastestUrl = urlBuilder.getFullUrl('npm2url', fastest);
+// Show the name of the current provider
+console.log(urlBuilder.provider);
+// -> 'jsdelivr'
 ```
+
+A provider is a simple function that accepts an npm path and returns a full URL string.
+
+```ts
+// Create a local provider
+const providerName = "local";
+urlBuilder.providers[providerName] = (path: string) =>
+  `http://localhost:8080/assets/${path}`;
+
+// Change the selected provider
+urlBuilder.provider = providerName;
+```
+
+By default, there are two providers:
+
+- `jsdelivr` (default)
+- `unpkg`
+
+### The fastest provider
+
+Users from different regions may benefit from different CDNs. So we'd better check the connections to get the best CDN provider.
+
+```ts
+import { urlBuilder } from "npm2url";
+
+// Update the selected provider to the fastest one
+await urlBuilder.findFastestProvider();
+// `urlBuilder.provider` is updated to the fastest provider
+console.log(urlBuilder.getFullUrl("npm2url"));
+// -> The fastest URL
+
+// Or you may hope to get the fastest provider without changing the selected one
+const fastest = await urlBuilder.getFastestProvider();
+// `urlBuilder.provider` is not changed, pass `fastest` explicitly
+console.log(urlBuilder.getFullUrl("npm2url", fastest));
+// -> The fastest URL
+```
+
+Note that an error will be thrown if none of the providers is reachable.
 
 ## License
 

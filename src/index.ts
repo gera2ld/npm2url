@@ -16,8 +16,12 @@ async function checkUrl(url: string, signal: AbortSignal) {
 }
 
 export class UrlBuilder {
+  /** All available providers for this builder. */
   providers = { ...defaultProviders };
 
+  /**
+   * The currently selected provider name.
+   */
   provider = "jsdelivr";
 
   /**
@@ -55,6 +59,9 @@ export class UrlBuilder {
     return this.provider;
   }
 
+  /**
+   * @deprecated Modify `this.providers` directly.
+   */
   setProvider(name: string, factory: ((path: string) => string) | null) {
     if (factory) {
       this.providers[name] = factory;
@@ -63,6 +70,10 @@ export class UrlBuilder {
     }
   }
 
+  /**
+   * Resolve an npm path to a full URL with the specified provider or the currently selected provider.
+   * If the path is already a full URL, it will be returned as is.
+   */
   getFullUrl(path: string, provider = this.provider) {
     if (path.includes("://")) {
       return path;
